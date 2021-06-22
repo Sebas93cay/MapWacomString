@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+# This script maps the installed wacom tablet to one identified screen
+
+echo "##################################################"
+devs=$(xsetwacom --list devices | awk '{print $7}')
+echo "These are the devices to set to the selected screen"
+xsetwacom --list devices | awk '{print $0}'
+
+echo ""
+echo "##################################################"
+screens=$(xrandr --listactivemonitors | awk 'NR>=2 {print $2}')
+echo "Screens Available:"
+xrandr --listactivemonitors | awk 'NR>=2 {print $0}'
+
+echo ""
+echo "##################################################"
+echo "Which screen do you want to map for the wacom tablet?"
+read screennumber
+
+screen=$(echo $screens | awk "{print \$${screennumber}}" | sed 's/[+\*]//g')
+# echo "${screens}" | cut -d' ' --fields="$screennumber"
+
+for i in $devs; do
+    xsetwacom --set "$i" MapToOutput $screen
+done
+
+echo "Wacom table was maped to $screen screen"
