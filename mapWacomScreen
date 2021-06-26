@@ -17,11 +17,11 @@ echo "##################################################"
 echo "Which screen do you want to map for the wacom tablet?"
 read screennumber
 
-screen=$(echo $screens | awk "{print \$${screennumber}}" | sed 's/[+\*]//g')
+screen=$(echo $screens | awk "{print \$$((screennumber + 1))}" | sed 's/[+\*]//g')
 # echo "${screens}" | cut -d' ' --fields="$screennumber"
 
 for i in $devs; do
-    xsetwacom --set "$i" MapToOutput $screen
+  xsetwacom --set "$i" MapToOutput $screen
 done
 
 echo "Wacom table was maped to $screen screen"
